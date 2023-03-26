@@ -2,14 +2,14 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Button, TouchableOpacity} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AddArticleComponent from './addArticle';
-import MyProfileComponent from './myProfile'; 
+import MyProfileComponent from './Profile/myProfile'; 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faNewspaper, faCog, faUser, faList, faPlusCircle, } from '@fortawesome/free-solid-svg-icons';
 import { MyColors } from '../colors';
 
 const Tab = createBottomTabNavigator();
 
-const ProfileTabComponent = ({navigation}: any) => {
+const ProfileTabComponent = ({navigation, route}: any) => {
 
     return (
         <Tab.Navigator screenOptions={{
@@ -22,7 +22,7 @@ const ProfileTabComponent = ({navigation}: any) => {
             tabBarInactiveTintColor: "#ff8a8a",
             
         }}>
-            <Tab.Screen name="Profile" component={MyProfileComponent} options={{
+            <Tab.Screen name="Profile" initialParams={route} component={MyProfileComponent} options={{
                 tabBarLabelStyle: styles.tabLabelContainer,
                 tabBarLabel: (props)=> <Text style={{color: props.color, ...styles.tabLabelContainer}}>My Profile</Text>,
                 tabBarIcon: (props) => (

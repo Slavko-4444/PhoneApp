@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, {useState} from 'react';
 import { SafeAreaView, StyleSheet, Text, View, ScrollView, FlatList, SectionList, Button, StatusBar, Alert, Image} from 'react-native';
 import { MyColors } from './src/utils/colors'
+import ArticleUserBox from './src/utils/components/Articles/article.user';
 import LoginComponent  from './src/utils/components/login';
 import MainComponent from './src/utils/components/main';
 import RegistrationComponent from './src/utils/components/registration.';
@@ -19,6 +20,13 @@ function App(): JSX.Element {
         <Stack.Screen name='Login' component={LoginComponent} />
       <Stack.Screen name='Registration' component={RegistrationComponent} />
       <Stack.Screen name='Main' component={MainComponent} />
+        <Stack.Screen name='UsersArticle' component={ArticleUserBox} options={{
+          headerShown: true,
+          headerTitleStyle: {
+            color: MyColors.gold,
+            fontSize: 22,
+          }
+        }} />
     </Stack.Navigator>      
   </NavigationContainer>
    

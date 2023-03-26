@@ -13,5 +13,9 @@ export const MyColors = {
     fancyBlack: '#515656',
     fancyBlue: '#89CFF0',
     softWhite: '#FBFAF5',
+    gold: '#D1B000',
+    lightOragne: '#DAF7A6',
+    specificWhite: '#F5EDE5',
+
     
 }  

@@ -4,7 +4,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemL
 import 'react-native-gesture-handler';
 import { MyColors } from '../colors';
 import ProfileTabComponent from './profile';
-import ArticleComponent from './articles';
+import ArticleComponent from './Articles/articles';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHomeUser, faPeopleCarry, faPeopleGroup, faPeopleRoof, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,8 +12,6 @@ const Drawer = createDrawerNavigator();
 
 
 const MainComponent = ({ navigation, route }: any) => {
-    
-    const { userId, username} = route.params;
     
     return (
       <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props}/>} screenOptions={{
@@ -27,12 +25,12 @@ const MainComponent = ({ navigation, route }: any) => {
           ...styles.drawerScreenContainer
         }
       }} >
-        <Drawer.Screen name='Articles' component={ArticleComponent} options={{
-          headerTitle: 'Articles of outher',
+        <Drawer.Screen name='Articles' component={ArticleComponent}  options={{
+          headerTitle: 'All articles',
           headerTitleAlign: 'center',
           drawerIcon: (props) =>  <FontAwesomeIcon icon={faPeopleRoof} color={"#b10000"} size={25} />,  
               }} />
-        <Drawer.Screen name='MyApp' component={ProfileTabComponent} options={{
+        <Drawer.Screen name='MyApp' component={ProfileTabComponent} initialParams={route} options={{
           headerShown: false,
           drawerLabel: 'My profile',
           drawerIcon: (props) => <FontAwesomeIcon icon={faHomeUser} color={"#b10000"} size={20} />,
@@ -55,7 +53,7 @@ function CustomDrawerContent(props: any) {
           style: 'cancel',
         },
         {
-          text: 'Log In',
+          text: 'Log out',
           onPress:()=> props.navigation.navigate('Login'),
         }
       ],
