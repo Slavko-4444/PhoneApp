@@ -15,7 +15,6 @@ const ArticleBox = (props: Props) => {
  
     
     return (
-        
             <View style={styles.ArticleBox}>
                 <View style={styles.LeftSide}>
                     <Text style={{fontSize:14, fontWeight:'bold', color:MyColors.gold}}>{data.title}</Text>
@@ -31,10 +30,9 @@ const ArticleBox = (props: Props) => {
                     
                 </View>
                 
-            </View>
-   
+            </View>            
+             
 
-            
         )
 
 }

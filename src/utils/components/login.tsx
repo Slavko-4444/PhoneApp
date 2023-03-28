@@ -19,7 +19,9 @@ const LoginComponent = ({ navigation, route }: any) => {
   })
   
     const doLogin = () => {
-
+      if (data.email == '' || data.password === '')
+        return setErrorMessage('Emtpy field')
+      
     api('/auth/Admin/login/user', 'post', {
       email: data.email,
       password: data.password

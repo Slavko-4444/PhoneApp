@@ -16,6 +16,7 @@ export const MyColors = {
     gold: '#D1B000',
     lightOragne: '#DAF7A6',
     specificWhite: '#F5EDE5',
+    myGreen: '#0FD000',
 
     
 }  

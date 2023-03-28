@@ -6,7 +6,7 @@ import { MyColors } from './src/utils/colors'
 import ArticleUserBox from './src/utils/components/Articles/article.user';
 import LoginComponent  from './src/utils/components/login';
 import MainComponent from './src/utils/components/main';
-import RegistrationComponent from './src/utils/components/registration.';
+import RegistrationComponent from './src/utils/components/Registration/registration';
 
 const Stack = createNativeStackNavigator();
 
