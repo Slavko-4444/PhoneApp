@@ -10,7 +10,6 @@ export interface UserInfoDto {
             address: string;
             birthDate: string;
             occupation: string;
-            contact: 'email'|'phone-conntact'
         }
     
 }

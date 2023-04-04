@@ -17,6 +17,7 @@ export const MyColors = {
     lightOragne: '#DAF7A6',
     specificWhite: '#F5EDE5',
     myGreen: '#0FD000',
+    brightBlue: '#0096FF',
 
     
 }  

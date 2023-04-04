@@ -7,6 +7,7 @@ import api, {ApiResponse} from '../../../api/api';
 import { IconButton, TextInput } from 'react-native-paper';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowRight, faQuoteRightAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 
 
@@ -20,41 +21,47 @@ const ArticleComponent = ({ navigation }: any) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [articles, setArticles] = useState<ReceivedArticleDto[]>([]);
     const [searchText, setSearchText] = useState('');
-    
+    const [refreshing, setRefreshing] = useState(false);
+
     useEffect(() => {
-        api('/api/articles', 'get', {})
-        .then((res: ApiResponse) => {
-            
-                if (res.status === 'service Error') {
-                    setErrorMessage("Service error");
-                    return;
-                  }
-            
-                if (res.status === 'login Error') {
-                    let message: string ='login error';
-                    if (res.data.statusCode !== undefined && res.data.message !== undefined) {
-                        message = res.data.message;
-                        setErrorMessage(message);
-                        setLoading(false);
-                      return;
-                    }
-                }
-            if (res.status === 'ok') {
-                    
-                    if (res.data.message !== undefined)
-                    {
-                        setErrorMessage(res.data.message)  
-                    } else {
-                        setErrorMessage('');
-                        let DATA: ReceivedArticleDto[] = res.data;
-                        setArticles(DATA)
-                    }
-                    setLoading(false)
-                    }
-        })
-        
+        articleAPICall();
     },[])
 
+
+    const articleAPICall = () => {
+            api('/api/articles', 'get', {})
+            .then((res: ApiResponse) => {
+                
+                    if (res.status === 'service Error') {
+                        setErrorMessage("Service error");
+                        return;
+                      }
+                
+                    if (res.status === 'login Error') {
+                        let message: string ='login error';
+                        if (res.data.statusCode !== undefined && res.data.message !== undefined) {
+                            message = res.data.message;
+                            setErrorMessage(message);
+                            setLoading(false);
+                          return;
+                        }
+                    }
+                if (res.status === 'ok') {
+                        
+                        if (res.data.message !== undefined)
+                        {
+                            setErrorMessage(res.data.message)  
+                        } else {
+                            setErrorMessage('');
+                            let DATA: ReceivedArticleDto[] = res.data;
+                            setArticles(DATA)
+                        }
+                        setLoading(false)
+                        }
+            })
+            
+
+    }
 
     const articlePosting = (arts: ReceivedArticleDto[]) => {
     
@@ -63,7 +70,7 @@ const ArticleComponent = ({ navigation }: any) => {
                 {
                     arts.map((article, index) => {
                         return (     
-                            <TouchableOpacity key={index} onPressOut={()=> navigation.navigate('UsersArticle', {data: article})}>
+                            <TouchableOpacity key={index} onPress={()=> navigation.navigate('UsersArticle', {data: article})}>
                                 <ArticleBox data={article} key={index} />
                             </TouchableOpacity>
                         )
@@ -78,7 +85,7 @@ const ArticleComponent = ({ navigation }: any) => {
         setLoading(true);
         api('/api/articles/search/specArticles', 'post', { keywords: searchText })
             .then((res: ApiResponse) => {
-          
+                                
                 if (res.status === 'service Error') {
                     setErrorMessage("Service error");
                     return;
@@ -109,11 +116,17 @@ const ArticleComponent = ({ navigation }: any) => {
 
     }
 
+    async function handleRefresh() {
+            setRefreshing(true);
+            await articleAPICall();
+            setRefreshing(false);
+          
+        }
+
     const ScrollArticles = () => {
         return (
-            <ScrollView >
+            <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
                 { articlePosting(articles) } 
-              
             </ScrollView>
         );
     }

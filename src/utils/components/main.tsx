@@ -7,6 +7,8 @@ import ProfileTabComponent from './profile';
 import ArticleComponent from './Articles/articles';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHomeUser, faPeopleCarry, faPeopleGroup, faPeopleRoof, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getIdentity } from '../../api/api';
 
 const Drawer = createDrawerNavigator();
 
@@ -40,9 +42,24 @@ const MainComponent = ({ navigation, route }: any) => {
 }
 
 function CustomDrawerContent(props: any) {
+
  
+  const HandleLogOut = async () => {
+    let keys;
+    try {
+
+      await AsyncStorage.removeItem('api_tokenuser');
+      await AsyncStorage.removeItem('api_refreshTokenuser');
+      await AsyncStorage.removeItem('api_identityuser');
+      props.navigation.navigate('Login')
+   } catch (error) {
+      console.log("Problem with deletin items from storage: ", error)  
+   } 
+  }
+
   return (
     <DrawerContentScrollView {...props}>
+      
       <DrawerItemList {...props} />
       <DrawerItem icon={(props)=>singOutIcon} label="Sign out" labelStyle={styles.AlertContainer} onPress={() =>Alert.alert(
       'You sure?',
@@ -54,7 +71,7 @@ function CustomDrawerContent(props: any) {
         },
         {
           text: 'Log out',
-          onPress:()=> props.navigation.navigate('Login'),
+          onPress:()=> HandleLogOut(),
         }
       ],
         {
@@ -66,6 +83,7 @@ function CustomDrawerContent(props: any) {
     </DrawerContentScrollView>
   );
 }
+
 
 const singOutIcon = <FontAwesomeIcon icon={faRightFromBracket} size={25} color={"#b10000"} />;
 

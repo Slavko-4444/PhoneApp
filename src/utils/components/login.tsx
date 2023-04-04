@@ -1,10 +1,11 @@
-import { faArrowAltCircleDown, faAt, faBed, faBedPulse, faBookReader, faCouch, faEthernet, faEye, faEyeSlash, faMailBulk, faRightToBracket, faUnlockKeyhole, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleDown, faAt, faBed, faBedPulse, faBookReader, faCouch, faEthernet, faEye, faEyeSlash, faMailBulk, faRightToBracket, faScrewdriverWrench, faUnlockKeyhole, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, NativeSyntheticEvent, TextInputChangeEventData, Alert} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, NativeSyntheticEvent, TextInputChangeEventData, Alert, KeyboardAvoidingView} from 'react-native';
 import { MyColors } from '../colors';
 import { TextInput, Button } from 'react-native-paper';
-import api, {ApiResponse, saveRefreshToken, saveToken} from '../../api/api';
+import api, {ApiResponse, getIdentity, getToken, saveIdentity, saveRefreshToken, saveToken} from '../../api/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -25,9 +26,8 @@ const LoginComponent = ({ navigation, route }: any) => {
     api('/auth/Admin/login/user', 'post', {
       email: data.email,
       password: data.password
-    }).then((res: ApiResponse) => {
+    }).then(async (res: ApiResponse) => {
     
-
       if (res.status === 'service Error') {
         console.log("Service error ")
         setErrorMessage("Service error");
@@ -42,14 +42,56 @@ const LoginComponent = ({ navigation, route }: any) => {
         }
       // ovdje znaci da smo povezani sa serverom, da je prosla prijava i da ocekujemo token i fresh token
       if (res.status === 'ok') {
-        saveToken(res.data.token, "user")
-        saveRefreshToken(res.data.refreshToken, 'user')
+        saveToken(res.data.token, "user");
+        saveRefreshToken(res.data.refreshToken, 'user');
+        saveIdentity(res.data.identity, "user");
         setLogin(true);
         setErrorMessage('');
       }
-      // sve je proslo ok...
+      navigation.navigate('Main', { userId: res.data.Id });
+      setData({
+        email: '',
+        password: ''
+      });
+    })
 
-      navigation.navigate('Main', res.data);
+  }
+
+  const doAdminLogIn = () => {
+
+      if (data.email == '' || data.password === '')
+        return setErrorMessage('Emtpy field')
+      
+    api('/auth/Admin/login/admin', 'post', {
+      username: data.email,
+      password: data.password
+    }).then(async (res: ApiResponse) => {
+    
+      if (res.status === 'service Error') {
+        console.log("Service error ")
+        setErrorMessage("Service error");
+        return;
+      }
+
+      if (res.status === 'login Error')
+        if (res.data.statusCode !== undefined && res.data.message !== undefined) {
+          let message: string = res.data.message;
+          setErrorMessage(message);
+          return;
+        }
+      // ovdje znaci da smo povezani sa serverom, da je prosla prijava i da ocekujemo token i fresh token
+      if (res.status === 'ok') {
+        saveToken(res.data.token, "administrator");
+        saveRefreshToken(res.data.refreshToken, 'administrator');
+        saveIdentity(res.data.identity, "administrator");
+        setLogin(true);
+        setErrorMessage('');
+      }
+      navigation.navigate('Admin', { admin: res.data});
+      setData({
+        email: '',
+        password: ''
+      });
     })
 
   }
@@ -68,7 +110,7 @@ const LoginComponent = ({ navigation, route }: any) => {
           </View>
           <View style={styles.LoginMainContainer}>
             <TextInput label="Email"  value={data.email} onChangeText={text=>setData({...data, email: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faAt} size={15} color={ MyColors.niceOrange } />}/>}  right={<TextInput.Affix text="/100" />} style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
-            <TextInput label="Password" value={data.password} onChangeText={text=>setData({...data, password: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faUnlockKeyhole} size={15} color={MyColors.niceOrange} />} />} secureTextEntry={seePass} style={styles.EmailContainer} textColor={MyColors.fancyBlack}
+            <TextInput label="Password" value={data.password} onChangeText={text=>setData({...data, password: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faUnlockKeyhole} size={15} color={MyColors.niceOrange} />} />} secureTextEntry={!seePass} style={styles.EmailContainer} textColor={MyColors.fancyBlack}
               right={
                 <TextInput.Icon icon={(prop) =>
                   <TouchableOpacity onPress={()=>setSeePass(!seePass)}>
@@ -80,12 +122,15 @@ const LoginComponent = ({ navigation, route }: any) => {
          <View style={{ display: (errorMessage!='') ? 'flex' : 'none' ,...styles.ViewError}}>
             <Text style={styles.ErrorMessageAlert}>{errorMessage}</Text>  
           </View>    
-          </View>
-          <View style={styles.BottomContainer}>
+        </View>
+
+        <View style= {styles.BottomContainer}>
             <Button onPress={doLogin} contentStyle={{ flexDirection: 'row-reverse'}} icon={() => <FontAwesomeIcon icon={faRightToBracket} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Log in</Text></Button>
             <Button onPress={()=> navigation.navigate('Registration')} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faUserPlus} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Sign up</Text></Button>
-          </View>
-         
+        </View>     
+        <KeyboardAvoidingView >
+            <Button onPress={doAdminLogIn} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faScrewdriverWrench} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Admin</Text></Button>
+        </KeyboardAvoidingView>
       </SafeAreaView>
       </View>
     );
@@ -107,6 +152,7 @@ const LoginComponent = ({ navigation, route }: any) => {
     },
     LoginMainContainer: {
       flex: 2,
+      marginBottom: 5,
     },
     BottomContainer: {
       flex: 1,

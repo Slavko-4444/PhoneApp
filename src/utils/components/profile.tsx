@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Button, TouchableOpacity} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AddArticleComponent from './addArticle';
+import AddArticleComponent from './Profile/addArticle';
 import MyProfileComponent from './Profile/myProfile'; 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faNewspaper, faCog, faUser, faList, faPlusCircle, } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +22,7 @@ const ProfileTabComponent = ({navigation, route}: any) => {
             tabBarInactiveTintColor: "#ff8a8a",
             
         }}>
-            <Tab.Screen name="Profile" initialParams={route} component={MyProfileComponent} options={{
+            <Tab.Screen name="Profile" initialParams={route} component={MyProfileComponent}  options={{
                 tabBarLabelStyle: styles.tabLabelContainer,
                 tabBarLabel: (props)=> <Text style={{color: props.color, ...styles.tabLabelContainer}}>My Profile</Text>,
                 tabBarIcon: (props) => (
@@ -36,8 +36,8 @@ const ProfileTabComponent = ({navigation, route}: any) => {
                   </View>
               ),
         }} />
-            <Tab.Screen name="AddArticle"  component={AddArticleComponent} options={{
-                headerTitle: prop => <Text style={{fontWeight:'900', fontSize: 20, }}>Add your article</Text>,
+            <Tab.Screen name="AddArticle" initialParams={route} component={AddArticleComponent} options={{
+                headerTitle: prop => <Text style={{fontWeight:'900', fontSize: 20, color: MyColors.niceRed}}>Add your article</Text>,
                 tabBarLabelStyle: styles.tabLabelContainer,
                 tabBarLabel:(props) => <Text style={{color: props.color, ...styles.tabLabelContainer}}>Add</Text>,
                 tabBarIcon: (props) => (

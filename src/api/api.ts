@@ -13,17 +13,19 @@ export default async function api(
         baseURL: ApiConfig.API_URL, // baseUrl + url === complited url
         url: path,
         data: body,
-        headers: {
+        headers: { 
             'Content-Type': 'application/json',
             'Authorization':await getToken(role),
         }
     }
-
+    
+    
     return new Promise<ApiResponse>((resolve) => {
         axios(requestDATA)
             .then(res => responseHandler(res, resolve))
             .catch(async error => {
                 if (error.response.status === 401) {
+                    console.log('401')
                     const newToken = await refreshToken(role);
                     
                     if (!newToken) {
@@ -82,7 +84,7 @@ async function responseHandler(res: AxiosResponse<any>, resolve: (value: ApiResp
 }
 
 async function repeatRequest(resolve: (value: ApiResponse) => void, requestDATA: AxiosRequestConfig) {
-    
+    console.log("We repeated the call");
     await axios(requestDATA)
         .then(res => {
             let response: ApiResponse;
@@ -119,7 +121,7 @@ async function refreshToken(role: 'user'|'administrator'): Promise<string | null
 
     const path = '/auth/Admin/'+ role +'/refresh';
     const data = {
-        token: getRefreshToken(role)
+        token: await getRefreshToken(role)
     }
 
     const refreshTokenRequestDATA: AxiosRequestConfig = {
@@ -157,9 +159,12 @@ export async function getIdentity(role: 'user' | 'administrator') {
 }
 
 async function  getRefreshToken(role: 'user' | 'administrator'): Promise<string> {
-    const token = await AsyncStorage.getItem('api_refreshToken'+ role);
+    const token = await AsyncStorage.getItem('api_refreshToken' + role);
+    
     return token + '';
 }
 export async function saveRefreshToken(token: string, role:'user'|'administrator') {
     await AsyncStorage.setItem('api_refreshToken' + role, token);       
 }
+ 
+

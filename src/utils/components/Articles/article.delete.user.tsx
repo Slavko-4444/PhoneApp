@@ -1,47 +1,20 @@
 import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Button, ScrollView, ActivityIndicator, TouchableOpacity, Linking} from 'react-native';
+import api, { ApiResponse } from '../../../api/api';
 import ReceivedArticleDto from '../../../DTO/articles types/received.one.article.dto';
 import { MyColors } from '../../colors';
 
 
-const ArticleUserBox = ({navigation, route}: any) => {
+const ArticleUserForDeleteBox = ({navigation, route}: any) => {
     
-    const  { data } = route.params; 
-
+    const { data } = route.params; 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: data.userArticles[0].user.forename + "'s POST ",
             
         });
-      }, [navigation, data.userArticles[0].user.forename]);
-
-      type OpenSettingsButtonProps = {
-        children: string;
-      };
+      }, [navigation, data.userArticles[0].user.forename]);  
       
-      const OpenSettingsButton = ({children}: OpenSettingsButtonProps) => {
-        const handlePress = useCallback(async () => {
-          // Open the custom settings if the app has one
-          await Linking.openURL(`tel:${data.userArticles[0].user.phoneNumber}`);
-        }, []);
-        return <View style={{...styles.LinkingButtton}}><Button color={MyColors.fancyRed}  title={children} onPress={handlePress} /></View>;
-    };
-    const OpenSMSButton = ({children}: OpenSettingsButtonProps) => {
-        const handlePress = useCallback(async () => {
-          // Open the custom settings if the app has one
-
-          await Linking.openURL(`sms:${data.userArticles[0].user.phoneNumber}`);
-        }, []);
-        return <View style={{...styles.LinkingButtton}}><Button color={'#0FD000'} title={children} onPress={handlePress} /></View>;
-    };
-    const OpenMailButton = ({children}: OpenSettingsButtonProps) => {
-        const handlePress = useCallback(async () => {
-          // Open the custom settings if the app has one
-            const subject = 'Sofasurfing';
-          await Linking.openURL(`mailto:${data.userArticles[0].user.email}?subject=${subject}`);
-        }, []);
-        return <View style={{...styles.LinkingButtton}}><Button title={children} onPress={handlePress} /></View>;
-      };
     return (
         <View style={{...styles.ArticleMainView}}>
             <ScrollView style={styles.ArticleMainScrollView}>
@@ -71,11 +44,6 @@ const ArticleUserBox = ({navigation, route}: any) => {
                 </View>
             </ScrollView>
         
-            <View style={styles.ButtonCall}>
-                <OpenSettingsButton>Call</OpenSettingsButton>
-                <OpenSMSButton>SMS</OpenSMSButton>
-                <OpenMailButton>Email</OpenMailButton>
-            </View>
 
         </View>
     )
@@ -132,15 +100,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '800',
     },
-    ButtonCall: {
-        marginBottom: 10,
-        flexDirection: 'row',
-    },
-    LinkingButtton: {
-        flex: 1,
-        paddingHorizontal: 3,
-        
-    }
+
 })
 
-export default  ArticleUserBox;
+export default  ArticleUserForDeleteBox;
