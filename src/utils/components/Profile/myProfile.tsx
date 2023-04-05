@@ -34,7 +34,7 @@ const MyProfileComponent = ({ route, navigation}: any) => {
     const AlerComponent = () => {
         return (
             <View style={{ backgroundColor:MyColors.appleCore, marginVertical: 15, marginRight: 170}}>
-                <Text style={{fontSize: 22, color: MyColors.fancyBlack, fontWeight: '500'}}>{errorMessage} found</Text>
+                <Text style={{fontSize: 22, color: MyColors.fancyBlack, fontWeight: '500'}}>{errorMessage}</Text>
          </View>
         );
     }

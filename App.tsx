@@ -77,12 +77,31 @@ function App(): JSX.Element {
           }, 
           headerTintColor: '#fff',
           headerStyle: {
-            backgroundColor: '#f4511e',
+            backgroundColor: '#1F51FF',
           },
           headerBackVisible: false, 
           headerRight: () => (
-            <View style={{ paddingRight: 20 }}> 
-              <IconButton onPress={()=> handleBackLogin({navigation})} icon={()=>  <FontAwesomeIcon icon={faHome} size={30} color={MyColors.niceOrange} /> }/>                  
+            <View style={{ paddingRight: 5 }}> 
+              <IconButton style={{ borderWidth: 3,backgroundColor:MyColors.brightBlue, borderColor: MyColors.white, width: 60, height: 50 }} onPress={() =>Alert.alert(
+      'Admin page',
+      'You want to sign out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Log out',
+          onPress:()=> handleBackLogin({ navigation }),
+        }
+      ],
+        {
+          cancelable: true,
+          
+        },
+
+      )}
+                icon={() => <FontAwesomeIcon icon={faHome} size={30} color={MyColors.white} />} />                  
             </View>
         ),
       })} />

@@ -6,6 +6,7 @@ import { MyColors } from '../colors';
 import { TextInput, Button } from 'react-native-paper';
 import api, {ApiResponse, getIdentity, getToken, saveIdentity, saveRefreshToken, saveToken} from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -86,6 +87,7 @@ const LoginComponent = ({ navigation, route }: any) => {
         saveIdentity(res.data.identity, "administrator");
         setLogin(true);
         setErrorMessage('');
+
       }
       navigation.navigate('Admin', { admin: res.data});
       setData({
@@ -97,8 +99,8 @@ const LoginComponent = ({ navigation, route }: any) => {
   }
 
   return (
-      <View style={styles.container}>
-        <SafeAreaView style={{ flex: 1 }}>
+    <View style={{flex:1, backgroundColor: MyColors.softWhite}}>
+      <ScrollView style={styles.container}>
           <View style={styles.TitileContainer}>
             <View style={styles.BedOnSide}>
                 <Text style={styles.SofaTitle}>Sofasurfing </Text>
@@ -125,40 +127,40 @@ const LoginComponent = ({ navigation, route }: any) => {
         </View>
 
         <View style= {styles.BottomContainer}>
-            <Button onPress={doLogin} contentStyle={{ flexDirection: 'row-reverse'}} icon={() => <FontAwesomeIcon icon={faRightToBracket} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Log in</Text></Button>
-            <Button onPress={()=> navigation.navigate('Registration')} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faUserPlus} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Sign up</Text></Button>
+            <Button onPress={doLogin} contentStyle={{ flexDirection: 'row-reverse'}} icon={() => <FontAwesomeIcon icon={faRightToBracket} size={20} color={MyColors.white} />}  mode="contained" buttonColor={MyColors.fancyRed}><Text style={{fontWeight:'800'}}>Log in</Text></Button>
+            <Button onPress={()=> navigation.navigate('Registration')} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faUserPlus} size={20} color={MyColors.white} />}  mode="contained" buttonColor={MyColors.fancyRed}><Text style={{fontWeight:'800'}}>Sign up</Text></Button>
         </View>     
-        <KeyboardAvoidingView >
-            <Button onPress={doAdminLogIn} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faScrewdriverWrench} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Admin</Text></Button>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-      </View>
+        <Button onPress={doAdminLogIn} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faScrewdriverWrench} size={20} color={MyColors.white} />} mode="contained" buttonColor={MyColors.brutalBlue}><Text style={{ fontWeight: '800' }}>Admin</Text></Button>
+           
+      </ScrollView>
+     
+    </View>
     );
 };
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      margin: 10,
+      flexGrow: 1,
+      marginHorizontal: 10,
       backgroundColor: MyColors.softWhite,
     },
     TitileContainer: {
-      flex: 1,
+      paddingTop: 55,
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingBottom: 10,
+      paddingBottom: 30,
 
     },
     LoginMainContainer: {
-      flex: 2,
-      marginBottom: 5,
+      marginVertical: 25,
     },
     BottomContainer: {
-      flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-evenly',
       alignItems: 'center',
+      paddingVertical: 10,
+      marginVertical: 18,
     },
     LoginTitle: {
       fontSize: 30,
@@ -205,7 +207,6 @@ const LoginComponent = ({ navigation, route }: any) => {
       fontWeight: 'bold',
       height: 30,
     },
-
 
   });
   

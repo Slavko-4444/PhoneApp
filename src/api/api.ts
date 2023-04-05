@@ -19,7 +19,6 @@ export default async function api(
         }
     }
     
-    
     return new Promise<ApiResponse>((resolve) => {
         axios(requestDATA)
             .then(res => responseHandler(res, resolve))

@@ -1,25 +1,27 @@
-import { faArrowAltCircleDown, faAt, faBed, faBedPulse, faBookReader, faCouch, faEthernet, faEye, faEyeSlash, faHomeUser, faMailBulk, faPlus, faRightToBracket, faUnlockKeyhole, faUser, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleDown, faAt, faBed, faBedPulse, faBookReader, faCouch, faEthernet, faEye, faEyeSlash, faHomeUser, faLocationDot, faLocationPin, faMailBulk, faMapLocationDot, faPlus, faRightToBracket, faSackDollar, faUnlockKeyhole, faUser, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useRef, useState} from 'react';
-import { Keyboard, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, NativeSyntheticEvent, TextInputChangeEventData, Alert, Platform, KeyboardAvoidingView, TextInputBase, Modal} from 'react-native';
+import { Keyboard, StyleSheet, Text, View, SafeAreaView,  Alert, Button as B, TouchableOpacity} from 'react-native';
 import { MyColors } from '../../colors';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, IconButton } from 'react-native-paper';
 import api, {ApiResponse, saveRefreshToken, saveToken} from '../../../api/api';
 import { UserRegistrationDto } from '../../../DTO/login types/registration.dto';
 import { ScrollView } from 'react-native-gesture-handler';
 import PhoneInput from 'react-native-phone-number-input';
+import DatePicker from 'react-native-date-picker';
 
 const RegistrationComponent =({ navigation, route }: any) => {
   const [colorLine, setColorLine] = useState(MyColors.brutalBlue);
   const [seePass, setSeePass] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [data, setData] = useState<UserRegistrationDto>({} as UserRegistrationDto)
+  const [data, setData] = useState<UserRegistrationDto>({contact:'email'} as UserRegistrationDto)
+  const [open, setOpen] = useState(false)
+  const [date, setDate] = useState(new Date());
 
   const doRegistration = () => {
-
+  
     api('/auth/Admin/user/registration', 'post', data)
       .then((res: ApiResponse) => {
-        console.log(res.data)
       if (res.status === 'service Error') {
         console.log("Service error ")
         setErrorMessage("Service error");
@@ -37,7 +39,7 @@ const RegistrationComponent =({ navigation, route }: any) => {
         setErrorMessage('');
         Alert.alert(
           'Successfully registrated!',
-          'Your ',
+          "Have a fun",
           [
             {
               text: 'Log in now!',
@@ -53,6 +55,33 @@ const RegistrationComponent =({ navigation, route }: any) => {
     })
 
   }
+
+
+  
+  const DateComponent = () => {
+
+        
+    return (
+        <View style={{marginVertical: 15,}}>
+          <B title="Insert birth date" onPress={() => setOpen(true)} />
+          <DatePicker
+          modal
+          mode="date"
+          open={open}
+          date={date}
+          onConfirm={(date) => {
+                setOpen(false)
+                setDate(date)
+                setData({...data,birthDate: formatDateForMySQL(date)})
+          }}
+          
+          onCancel={() => {
+                setOpen(false)
+            }}
+            />
+        </View>
+    )
+}
 
   return (
     <View style={styles.container}>
@@ -78,16 +107,20 @@ const RegistrationComponent =({ navigation, route }: any) => {
         <View style={{ borderBottomWidth: 2, borderBottomColor: colorLine }}> 
             <PhoneInput value={data.phoneNumber}  onChangeFormattedText={(text)=> {setColorLine(MyColors.myGreen); return setData({...data, phoneNumber: text})}} defaultCode='ME'/>
         </View>
-           
+            
+        <DateComponent/>  
+        <TextInput label="Occupation"  value={data.occupation} onChangeText={text=>setData({...data, occupation: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faSackDollar} size={18} color={ MyColors.brutalBlue } />}/>}  right={<TextInput.Affix text="/100" />} style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
+            <TextInput label="Address" value={data.address} onChangeText={text => setData({ ...data, address: text })} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faMapLocationDot} size={20} color={MyColors.brutalBlue} />} />} style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
+        
         <View style={{ display: (errorMessage != '') ? 'flex' : 'none', ...styles.ViewError }}>
             <Text style={styles.ErrorMessageAlert}>{errorMessage}</Text>  
-          </View>    
+        </View>    
         </View>
   
       
           <View style={styles.BottomContainer} >
-            <Button onPress={()=> navigation.goBack()} contentStyle={{ flexDirection: 'row-reverse'}} icon={() => <FontAwesomeIcon icon={faRightToBracket} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Go to log in</Text></Button>
-            <Button onPress={doRegistration} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faUserPlus} size={20} color={MyColors.fancyBlack} />}  mode="contained" buttonColor={MyColors.fancyBlue}><Text style={{fontWeight:'800'}}>Sign up</Text></Button>
+            <Button onPress={()=> navigation.goBack()} contentStyle={{ flexDirection: 'row-reverse'}} icon={() => <FontAwesomeIcon icon={faRightToBracket} size={20} color={MyColors.gold} />}  mode="contained" buttonColor={MyColors.brutalBlue}><Text style={{fontWeight:'800'}}>Go to log in</Text></Button>
+            <Button onPress={doRegistration} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faUserPlus} size={20} color={MyColors.fancyRed} />}  mode="contained" buttonColor={MyColors.brutalBlue}><Text style={{fontWeight:'800'}}>Sign up</Text></Button>
           </View>   
       </ScrollView>
         </SafeAreaView>
@@ -169,4 +202,11 @@ const styles = StyleSheet.create({
   
 });
   
+function formatDateForMySQL(date: Date) {
+  // pretvori date u string u formatu: yyyy-mm-dd hh:mm:ss
+  const formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
+
+  return formattedDate.substr(0, 10);
+}
+
 export default RegistrationComponent;

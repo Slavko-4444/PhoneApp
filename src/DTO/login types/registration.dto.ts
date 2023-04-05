@@ -4,4 +4,9 @@ export interface UserRegistrationDto {
     forename: string;
     surname: string;
     phoneNumber: string;
+    address: string;
+    birthDate: string;
+    occupation: string;
+    contact: "email" | "phone-conntact";
+    
 }
