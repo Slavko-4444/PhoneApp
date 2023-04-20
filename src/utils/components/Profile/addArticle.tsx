@@ -342,6 +342,7 @@ const styles = StyleSheet.create({
     Info: {
         fontSize: 16,
         fontWeight: '800',
+        color: MyColors.brightBlue
     },
 })
 

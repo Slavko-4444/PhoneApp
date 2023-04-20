@@ -107,7 +107,7 @@ const LoginComponent = ({ navigation, route }: any) => {
               <FontAwesomeIcon icon={faCouch} size={50} color={MyColors.fancyRed} />
             </View>
 
-          <Text style={styles.LoginTitle}> Login </Text>
+          <Text style={styles.LoginTitle}> LOGIN </Text>
         
           </View>
           <View style={styles.LoginMainContainer}>
@@ -128,7 +128,12 @@ const LoginComponent = ({ navigation, route }: any) => {
 
         <View style= {styles.BottomContainer}>
             <Button onPress={doLogin} contentStyle={{ flexDirection: 'row-reverse'}} icon={() => <FontAwesomeIcon icon={faRightToBracket} size={20} color={MyColors.white} />}  mode="contained" buttonColor={MyColors.fancyRed}><Text style={{fontWeight:'800'}}>Log in</Text></Button>
-            <Button onPress={()=> navigation.navigate('Registration')} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faUserPlus} size={20} color={MyColors.white} />}  mode="contained" buttonColor={MyColors.fancyRed}><Text style={{fontWeight:'800'}}>Sign up</Text></Button>
+          <Button onPress={() => navigation.navigate('Registration',
+            {
+              latitude: 37.78928,
+              longitude: -122.4324
+            })}
+            contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faUserPlus} size={20} color={MyColors.white} />} mode="contained" buttonColor={MyColors.fancyRed}><Text style={{ fontWeight: '800' }}>Sign up</Text></Button>
         </View>     
         <Button onPress={doAdminLogIn} contentStyle={{ flexDirection: 'row-reverse' }} icon={() => <FontAwesomeIcon icon={faScrewdriverWrench} size={20} color={MyColors.white} />} mode="contained" buttonColor={MyColors.brutalBlue}><Text style={{ fontWeight: '800' }}>Admin</Text></Button>
            
@@ -138,13 +143,14 @@ const LoginComponent = ({ navigation, route }: any) => {
     );
 };
 
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
+ 
     container: {
       flexGrow: 1,
       marginHorizontal: 10,
       backgroundColor: MyColors.softWhite,
     },
-    TitileContainer: {
+  TitileContainer: {
       paddingTop: 55,
       flexDirection: 'column',
       alignItems: 'center',
@@ -163,23 +169,22 @@ const LoginComponent = ({ navigation, route }: any) => {
       marginVertical: 18,
     },
     LoginTitle: {
-      fontSize: 30,
-      fontWeight: '800',
+      fontSize: 28,
+      fontWeight: '900',
       color: MyColors.fancyBlack,
       letterSpacing: 3,
-      fontFamily: "serif",
+
     },
     SofaTitle: {
       fontSize: 34,
       fontWeight: '900',
       color: MyColors.niceOrange,
       fontStyle: 'italic',
-      
     },
     BedOnSide: {
       flexDirection: 'row',
     },
-    EmailContainer: {
+  EmailContainer: {
       marginTop: 15,
       marginBottom: 30,
       fontSize: 18,

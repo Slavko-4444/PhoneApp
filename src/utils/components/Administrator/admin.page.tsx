@@ -163,7 +163,7 @@ const AdminPageComponent = ({navigation, route}: any) => {
     return (
         <ScrollView style={styles.scrollContainer} refreshControl={<RefreshControl refreshing={refershing} onRefresh={handleRefresh} />}>
                     <Text style={{fontSize: 21, fontWeight: '700', color: MyColors.fancyBlack, marginVertical: 15}}>Users </Text>
-            {loading ? <LoadingCompnent /> : errorMessage != '' ? <AlerComponent /> : <UsersMappingComponent/> }
+            {loading ? <LoadingCompnent /> : errorMessage != '' ? <AlerComponent /> :<View style={{flexDirection: 'column-reverse'}}><UsersMappingComponent/></View>  }
         </ScrollView>       
     );
 }

@@ -1,27 +1,58 @@
-import { faArrowAltCircleDown, faAt, faBed, faBedPulse, faBookReader, faCouch, faEthernet, faEye, faEyeSlash, faHomeUser, faLocationDot, faLocationPin, faMailBulk, faMapLocationDot, faPlus, faRightToBracket, faSackDollar, faUnlockKeyhole, faUser, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import {  faAt, faCouch, faEye, faMapLocationDot, faRightToBracket, faSackDollar, faUnlockKeyhole, faUser, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, {useEffect, useRef, useState} from 'react';
-import { Keyboard, StyleSheet, Text, View, SafeAreaView,  Alert, Button as B, TouchableOpacity} from 'react-native';
+import React, {createContext, useEffect, useState} from 'react';
+import { StyleSheet, Text, View, SafeAreaView,  Alert, Button as B, TouchableOpacity} from 'react-native';
 import { MyColors } from '../../colors';
-import { TextInput, Button, IconButton } from 'react-native-paper';
-import api, {ApiResponse, saveRefreshToken, saveToken} from '../../../api/api';
+import { TextInput, Button,  } from 'react-native-paper';
+import api, {ApiResponse} from '../../../api/api';
 import { UserRegistrationDto } from '../../../DTO/login types/registration.dto';
 import { ScrollView } from 'react-native-gesture-handler';
 import PhoneInput from 'react-native-phone-number-input';
 import DatePicker from 'react-native-date-picker';
+import MapComponent from '../Maps/map';
+import { LatLng } from 'react-native-maps';
+
+
+type VariableContextType = {
+  uLocation: LatLng;
+  setuLocation: (value: LatLng) => void;
+};
+
+export const VariableContext = createContext<VariableContextType>({
+  uLocation: {
+    latitude: 37.78928,
+    longitude: -122.4324
+  },
+  setuLocation: () => {},
+});
 
 const RegistrationComponent =({ navigation, route }: any) => {
   const [colorLine, setColorLine] = useState(MyColors.brutalBlue);
-  const [seePass, setSeePass] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [data, setData] = useState<UserRegistrationDto>({contact:'email'} as UserRegistrationDto)
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState(new Date());
 
+  const [uLocation, setuLocation] = useState<LatLng>({
+    latitude: 37.78928,
+    longitude: -122.4324
+  });
+
+  useEffect(() => {
+    console.log("Uso", route.params);
+    if (route.params) {
+      setuLocation(route.params);
+    }
+  },[route.params])
+ 
   const doRegistration = () => {
-  
+
+    data.address = String(uLocation.latitude) + " " + String(uLocation.longitude);
+    
     api('/auth/Admin/user/registration', 'post', data)
       .then((res: ApiResponse) => {
+        console.log("Res", res);
+
       if (res.status === 'service Error') {
         console.log("Service error ")
         setErrorMessage("Service error");
@@ -56,8 +87,12 @@ const RegistrationComponent =({ navigation, route }: any) => {
 
   }
 
+  const handleMapPress = () => {
+    
+    navigation.navigate('Map',uLocation);
+  }
 
-  
+ 
   const DateComponent = () => {
 
         
@@ -85,6 +120,13 @@ const RegistrationComponent =({ navigation, route }: any) => {
 
   return (
     <View style={styles.container}>
+
+      <VariableContext.Provider value={{
+        uLocation: uLocation, setuLocation(value) {
+        setuLocation(value);
+      },
+      }} />
+      
       <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{flex: 1}}>
       
@@ -101,7 +143,7 @@ const RegistrationComponent =({ navigation, route }: any) => {
         <TextInput label="Surname" value={data.surname} onChangeText={text => setData({ ...data, surname: text })} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faUser} size={15} color={MyColors.brutalBlue} />} />} style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
         <TextInput label="Forename" value={data.forename} onChangeText={text => setData({ ...data, forename: text })} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faUserEdit} size={15} color={MyColors.brutalBlue} />} />}  style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
         <TextInput label="Email"  value={data.email} onChangeText={text=>setData({...data, email: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faAt} size={15} color={ MyColors.brutalBlue } />}/>}  right={<TextInput.Affix text="/100" />} style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
-        <TextInput label="Password" value={data.password} onChangeText={text=>setData({...data, password: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faUnlockKeyhole} size={15} color={MyColors.brutalBlue} />} />} secureTextEntry={seePass} style={styles.EmailContainer} textColor={MyColors.fancyBlack}
+        <TextInput label="Password" value={data.password} onChangeText={text=>setData({...data, password: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faUnlockKeyhole} size={15} color={MyColors.brutalBlue} />} />} style={styles.EmailContainer} textColor={MyColors.fancyBlack}
               right={<TextInput.Icon icon={(prop) =><FontAwesomeIcon icon={faEye} color={MyColors.brutalBlue}/> } />}/>
         
         <View style={{ borderBottomWidth: 2, borderBottomColor: colorLine }}> 
@@ -110,7 +152,12 @@ const RegistrationComponent =({ navigation, route }: any) => {
             
         <DateComponent/>  
         <TextInput label="Occupation"  value={data.occupation} onChangeText={text=>setData({...data, occupation: text})} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faSackDollar} size={18} color={ MyColors.brutalBlue } />}/>}  right={<TextInput.Affix text="/100" />} style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
-            <TextInput label="Address" value={data.address} onChangeText={text => setData({ ...data, address: text })} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faMapLocationDot} size={20} color={MyColors.brutalBlue} />} />} style={styles.EmailContainer} textColor={MyColors.fancyBlack} />
+        
+        <TouchableOpacity onPress={handleMapPress}>
+            <View style={styles.mapContainer}>
+                <FontAwesomeIcon style={styles.mapContainer} icon={faMapLocationDot} size={40} color={MyColors.myGreen} />      
+            </View>      
+        </TouchableOpacity>
         
         <View style={{ display: (errorMessage != '') ? 'flex' : 'none', ...styles.ViewError }}>
             <Text style={styles.ErrorMessageAlert}>{errorMessage}</Text>  
@@ -199,7 +246,17 @@ const styles = StyleSheet.create({
   containerKey: {
     flex: 1,
   },
-  
+  mapContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: MyColors.brightBlue,
+    marginHorizontal: 100,
+    height: 80,
+    borderWidth: 2,
+    borderColor: MyColors.niceRed,
+    borderRadius: 25,
+  }
 });
   
 function formatDateForMySQL(date: Date) {

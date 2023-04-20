@@ -24,10 +24,8 @@ const ArticleBox = (props: Props) => {
                     <Text style={styles.describeText}>email: {data.userArticles[0].user.email}</Text>
                 </View>
                 <View style={styles.RightSide}>
-                    <Text style={{fontWeight: 'bold', fontSize: 16}}>Posted:</Text>
-                    <Text style={{fontSize: 14}}>{ data.userArticles[0].createdAt }</Text>
-                    <Text style={{fontSize: 14}}>Location: </Text>
-                    
+                    <Text style={{fontWeight: 'bold', fontSize: 16, color: MyColors.fancyBlack}}>Posted:</Text>
+                    <Text style={{fontSize: 14, color: MyColors.fancyBlack}}>{ String(data.userArticles[0].createdAt).slice(0, -8).replace(/T/g, ' ') }</Text>
                 </View>
                 
             </View>            
@@ -39,7 +37,7 @@ const ArticleBox = (props: Props) => {
 
 const styles = StyleSheet.create({
     ArticleBox: {
-        height: 110,
+        height: 125,
         borderWidth: 3,
         borderRadius: 18,
         marginVertical: 8,
@@ -64,6 +62,7 @@ const styles = StyleSheet.create({
     describeText: {
         fontSize: 12,
         fontWeight: '700',
+        color: MyColors.fancyBlack
     },
 
 });

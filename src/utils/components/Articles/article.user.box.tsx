@@ -93,7 +93,7 @@ const ArticleSpecBox = (props: Props) => {
 
 const styles = StyleSheet.create({
     ArticleBox: {
-        height: 110,
+        height: 120,
         borderWidth: 3,
         borderRadius: 18,
         marginVertical: 8,
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     describeText: {
         fontSize: 12,
         fontWeight: '700',
+        color: MyColors.fancyBlack
     },
 
 });

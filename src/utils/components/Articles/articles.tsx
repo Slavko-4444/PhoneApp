@@ -6,7 +6,7 @@ import ArticleBox from './article.box';
 import api, {ApiResponse} from '../../../api/api';
 import { IconButton, TextInput } from 'react-native-paper';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faArrowRight, faQuoteRightAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faMapLocation, faMapMarked, faMapMarker, faMapMarkerAlt, faQuoteRightAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { RefreshControl } from 'react-native-gesture-handler';
 
 
@@ -80,6 +80,10 @@ const ArticleComponent = ({ navigation }: any) => {
         );
     }
 
+    const handleMap = () => {
+        navigation.navigate('MapUsers');
+    }
+
     const handleSearch = () => {
         
         setLoading(true);
@@ -126,8 +130,10 @@ const ArticleComponent = ({ navigation }: any) => {
     const ScrollArticles = () => {
         return (
             <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
-                { articlePosting(articles) } 
-            </ScrollView>
+                    <View style={{flexDirection: 'column-reverse'}}>
+                        { articlePosting(articles) } 
+                    </View>
+                </ScrollView>
         );
     }
 
@@ -154,10 +160,10 @@ const ArticleComponent = ({ navigation }: any) => {
             
             <View style={{ flexDirection: 'row' }}>
             <View style={{flex:4, width: '100%'}}>
-                <TextInput  label="Search" focusable={true} mode='outlined' value={searchText} onChangeText={text=>setSearchText(text)} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faSearch} size={15} color={MyColors.brutalBlue} />} />}
-                    style={styles.serchInput} textColor={MyColors.fancyBlack} />
+                <TextInput onSubmitEditing={handleSearch} label="Search" focusable={true} mode='outlined' value={searchText} onChangeText={text=>setSearchText(text)} left={<TextInput.Icon icon={() => <FontAwesomeIcon icon={faSearch} size={15} color={MyColors.brutalBlue} />} />}
+                 textColor={MyColors.fancyBlack} />
             </View>
-            <IconButton onPress={handleSearch} style={{flex: 1,  backgroundColor:MyColors.fancyRed}} icon={() => <FontAwesomeIcon icon={faArrowRight} color={MyColors.softWhite} size={20} />} />
+            <IconButton onPress={handleMap} style={{flex: 1,  backgroundColor:MyColors.fancyRed}} icon={() => <FontAwesomeIcon icon={faMapMarkerAlt} color={MyColors.softWhite} size={20} />} />
             </View>
             <Text style={{fontSize: 21, fontWeight: '700', color: MyColors.fancyBlack, marginVertical: 15}}>Articles :</Text>
             {(errorMessage !== '')?<AlerComponent/>:(loading || articles.length === 0)?<LoadingCompnent/>: <ScrollArticles />}
@@ -192,9 +198,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         height: 30,
     },
-    serchInput: {
-          
-      }
-      
 });
+
 export default ArticleComponent;
